@@ -197,10 +197,11 @@ class Analyzer():
         # unity (meter, cm, ....)
 
     def set_interpolationParams(
-            self,
-            Radius=None,
-            Sharpness=8,
-            kernel='Gaussian'):
+        self,
+        Radius=None,
+        Sharpness=8,
+        kernel='Gaussian'
+    ):
         if Radius is None:
             Radius = self.scale * 30  # 30 px when the data set is not scaled
             self.interp_params = dict(Radius=Radius,
@@ -422,27 +423,6 @@ class Analyzer():
         else:
             self.frameAv = frameav
 
-# TODO and test
-#    def initializeAveragedFrameFromSequence(self,vec):
-#        frameav=None
-#        incr=0
-#        for i in vec:
-#            incr+=1
-#            l=self.listD[i]
-#            if self.processingMode=='image sequence':
-#                frame=cv2.imread(self.folder_src+'/'+l,self.imreadOption)
-#                frame=Tools.convertToGrayScale(frame)
-#        #    frame=cv2.imread(folder_src+'/'+l)
-#            frame=(frame-self.rangeOfPixels[0])/(self.rangeOfPixels[1]-self.rangeOfPixels[0])*255
-#            frame[np.where(frame<0)]=0
-#            frame[np.where(frame>255)]=255
-#
-#            if frameav is None:
-#                frameav=frame
-#            else:
-#                frameav=frameav+frame
-#            frameav=frameav/incr
-#            self.frameAv=frameav
     def readFrame(self, i):
         if self.processingMode == 'image sequence':
             l = self.listD[i]
@@ -472,37 +452,6 @@ class Analyzer():
             self.stabilize(i)
         if self.birdEyeMod:
             self.transformBirdEye()
-
-    # TODO  def stepDeepFlow(self, pr, i):
-        # self.readFrame(i)
-        # from deepmatching import deepmatching
-        # from deepflow2 import deepflow2
-        # if pr == False:
-        #     self.prev_col = None
-        # else:
-        #     self.matches = deepmatching(self.prev_col, self.vis)
-        #     self.flow = deepflow2(self.prev_col, self.vis,
-        #                           self.matches, '-sintel')
-        # self.prev_col = np.copy(self.vis)
-
-    # def extractDeepFlow(self, display=False, saveImgPath=None, Type='norm', imgFormat='png', **args):
-    #     self.reset()
-    #     for pr, i in zip(self.prev, self.vec):
-    #         self.stepDeepFlow(pr, i)
-    #         if pr == True:
-    #             self.Ux = self.flow[:, :, 0]
-    #             self.Uy = self.flow[:, :, 1]
-    #             self.UxTot.append(self.flow[:, :, 0])
-    #             self.UyTot.append(self.flow[:, :, 1])
-    #             Field = Render.setField(self.Ux, self.Uy, Type)
-
-    #             if display == 'field':
-    #                 self.opyfDisp.plotField(Field, vis=self.vis, **args)
-    #                 if saveImgPath is not None:
-    #                     self.opyfDisp.fig.savefig(saveImgPath+'/'+display+'_'+format(
-    #                         i, '04.0f')+'_to_'+format(i+self.paramVecTime['step'], '04.0f')+'.'+imgFormat)
-    #                 plt.show()
-    #                 time.sleep(0.1)
 
     def stepTracks(self, pr, i):
         if not pr:
@@ -1117,18 +1066,6 @@ class Analyzer():
         if saveParamsImgProc:
             self.writeImageProcessingParamsJSON(outFolder=outFolder)
 
-# TODO for csv format on file for each time step (or only one file if coordimates)
-#        elif fileFormat=='csv':
-#            if fileSequence==False:
-#                Files.csv_WriteUnstructured2DTimeserie(outFolder+'/'+filename+'.'+fileFormat,self.Time,self.Xdata,self.Vdata)
-#            elif fileSequence==True:
-#                Files.mkdir2(outFolder+'/'+filename)
-#                for x,v,t in zip(self.Xdata,self.Vdata,self.Time):
-#                    Files.write_csvTrack2D(outFolder+'/'+filename+'/'+format(t,'04.0f')+'_to_'+format(t+self.paramVecTime['step'],'04.0f')+'.'+fileFormat,x,v)
-#
-#
-# TODO export this method in Files
-
     def writeTracks(self,
                     filename=None,
                     fileFormat='csv',
@@ -1374,45 +1311,6 @@ class Analyzer():
         self.vis = cv2.warpPerspective(
             self.vis, self.homography, (self.Lvis, self.Hvis))
 
-    # #    plt.subplot(121),plt.imshow(img),plt.title('Input')
-    # #    plt.subplot(122),plt.imshow(dst),plt.title('Output')
-    # #    plt.show()
-    #     return img_wraped
-
-    #            for x,v in zip(Xdata,Vdata):
-
-    # def extractGoodFeaturesPositionsAndExtractFeatures(self, display=False,
-    # windowSize=(16, 16)):
-
-    #     for pr, i in zip(self.prev, self.vec):
-
-    #         #    frame=frame[:,:,1]
-    #         l = self.listD[i]
-
-    # vis = cv2.imread(self.folder_src+'/'+l)  # special for tiff images
-
-    #         vis = Render.CLAHEbrightness(
-    #             vis, 0, tileGridSize=(20, 20), clipLimit=2)
-    #         if len(np.shape(vis)) == 3:
-    #             current_gray = cv2.cvtColor(vis, cv2.COLOR_BGR2GRAY)
-    #         else:
-    #             current_gray = vis/media/gauthier/Data-Gauthier/Gauthier/Download/MNT_1m_Brague@Biot.tif
-    #         current_gray = current_gray[self.ROI[1]:(
-    # self.ROI[3]+self.ROI[1]), self.ROI[0]:(self.ROI[2]+self.ROI[0])]
-
-    #         p0 = cv2.goodFeaturesToTrack(current_gray, **self.feature_params)
-    #         X = p0.reshape(-1, 2)
-    #         samples = []
-    #         for x in X:
-    #             featureExtraction = current_gray[int(x[0]-windowSize[0]/2):int(
-    #                 x[0]+windowSize[0]/2), int(x[1]-windowSize[1]/2):int(x[1]+windowSize[1]/2)]
-    #             samples.append(featureExtraction)
-
-    #         self.samplesMat.append(samples)
-    #         self.Xsamples.append(X)
-    #         if display == 'points':
-    #             self.show(self, X, X, vis, display='points')
-
 
 class videoAnalyzer(Analyzer):
     def __init__(self, video_src, **args):
@@ -1463,12 +1361,3 @@ class frameSequenceAnalyzer(Analyzer):
         '''
         return [self.atoi(c) for c in re.split(r'(\d+)', text)]
 
-
-# TODO    def writeGoodFeaturesPositionsAndExtraction(self,fileFormat='hdf5',imgFormat='png',outFolder='',filename=None,fileSequence=False):
-#        if filename is None:
-#            filename='Goof_features_positions_from_frame'+ str(self.vec[0]) + 'to' + str(self.vec[-2]) + '_with_shift_'+str(self.paramVecTime['shift'])
-#
-#        for samples in self.samplesMat:
-#           folderFrame=outFolder+'/'+filename+'/'+format(t,'04.0f')+'_to_'+format(t+self.paramVecTime['step']
-#           Files.mkdir2()
-#           cv2.imwrite()

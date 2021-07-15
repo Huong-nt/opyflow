@@ -12,25 +12,26 @@ from vtk.util.numpy_support import vtk_to_numpy, numpy_to_vtk
 # A function that allow to use interpolation algorithm of vtk
 # Source Numpy array of points [X] and values [V]
 # The Points are 2D numpy arrays and values need to be at same size
-# TODO an home made interpolator from pointlocator vtk class  
+# TODO an home made interpolator from pointlocator vtk class
+
 
 def npInterpolateVTK2D(npPoints, npValues, npTargetPoints, ParametreInterpolatorVTK=None):
     # Set SParameters if not define
-    
+
     if ParametreInterpolatorVTK == None:
         ParametreInterpolatorVTK = {'kernel': 'Gaussian',
                                     'Radius': 20.,
                                     'Sharpness': 2.}
     print('[' + ParametreInterpolatorVTK['kernel'] + ' Interpolation - Radius =' + str(ParametreInterpolatorVTK['Radius']
                                                                                        ) + ' - Sharpness =' + str(ParametreInterpolatorVTK['Sharpness']) + '] processing... ')
-# Set Source Points
+    # Set Source Points
     UnGrid = vtk.vtkUnstructuredGrid()
     vtkP = vtk.vtkPoints()
     for [x, y] in npPoints:
         vtkP.InsertNextPoint(x, y, 0.)
 
     UnGrid.SetPoints(vtkP)
-# Set source Point Values
+    # Set source Point Values
     l, c = npValues.shape
     for i in range(0, c):
         vtkFA = vtk.vtkFloatArray()
@@ -65,7 +66,7 @@ def npInterpolateVTK2D(npPoints, npValues, npTargetPoints, ParametreInterpolator
     interp.SetInputData(vtkTargetPointsPolyData)
     interp.SetSourceData(UnGrid)
     interp.SetKernel(Kernel)
-#        interp.GetLocator().SetNumberOfPointsPerBucket(1)
+    # interp.GetLocator().SetNumberOfPointsPerBucket(1)
     interp.InterpolateZOff()
     interp.SetNullPointsStrategyToMaskPoints()
 
@@ -76,7 +77,7 @@ def npInterpolateVTK2D(npPoints, npValues, npTargetPoints, ParametreInterpolator
     nppointsArr = vtk_to_numpy(pointsArr)
     pdata = outputInterp.GetPointData()
 
-# Convert volocities into Numpy Array
+    # Convert volocities into Numpy Array
 
     npOutputValues = np.zeros((len(npTargetPoints), c))
 
@@ -97,15 +98,15 @@ def npInterpolateVTK3D(npPoints, npValues, npTargetPoints, ParametreInterpolator
                                     'Sharpness': 2.}
     print('[' + ParametreInterpolatorVTK['kernel'] + ' Interpolation - Radius =' + str(ParametreInterpolatorVTK['Radius']
                                                                                        ) + ' - Sharpness =' + str(ParametreInterpolatorVTK['Sharpness']) + '] processing... ')
-#
-# Set Source Points
+    #
+    # Set Source Points
     UnGrid = vtk.vtkUnstructuredGrid()
     vtkP = vtk.vtkPoints()
     for [x, y, z] in npPoints:
         vtkP.InsertNextPoint(x, y, z)
 
     UnGrid.SetPoints(vtkP)
-# Set source Point Values
+    # Set source Point Values
     l, c = npValues.shape
     for i in range(0, c):
         vtkFA = vtk.vtkFloatArray()
@@ -114,7 +115,7 @@ def npInterpolateVTK3D(npPoints, npValues, npTargetPoints, ParametreInterpolator
             vtkFA.InsertNextValue(v[i])
         UnGrid.GetPointData().AddArray(vtkFA)
 
-# Set Target Points
+    # Set Target Points
 
     vtkTP = vtk.vtkPoints()
     for [x, y, z] in npTargetPoints:
@@ -136,7 +137,7 @@ def npInterpolateVTK3D(npPoints, npValues, npTargetPoints, ParametreInterpolator
         Kernel = vtk.vtkShepardKernel()
         Kernel.SetRadius(ParametreInterpolatorVTK['Radius'])
 
-   # Build locator
+    # Build locator
     locator = vtk.vtkStaticPointLocator()
     locator.SetDataSet(UnGrid)
     locator.BuildLocator()
@@ -156,7 +157,7 @@ def npInterpolateVTK3D(npPoints, npValues, npTargetPoints, ParametreInterpolator
     nppointsArr = vtk_to_numpy(pointsArr)
     pdata = outputInterp.GetPointData()
 
-# Convert volocities into Numpy Array
+    # Convert volocities into Numpy Array
 
     npOutputValues = np.zeros((len(npTargetPoints), c))
 

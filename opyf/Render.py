@@ -70,7 +70,7 @@ def opyfPlot(grid_x, grid_y, gridVx, gridVy, Xdata, Vdata, setPlot, vis=None, Pt
         resy = np.absolute(grid_y[1, 0]-grid_y[0, 0])
         extent = [grid_x[0, 0]-resx/2, grid_x[0, -1]+resx /
                   2, grid_y[-1, 0]-resy/2, grid_y[0, 0]+resy/2]
-#        figp,ax,im=opyfField2(grid_x,grid_y,Field,ax=ax,**infoPlotField)
+        # figp,ax,im=opyfField2(grid_x,grid_y,Field,ax=ax,**infoPlotField)
         fig, ax, im = opyfField(
             Field, ax=ax, extent=extent, extentr=extentr, **infoPlotField)
 
@@ -141,18 +141,17 @@ class opyfDisplayer:
             extent=self.paramPlot['extentFrame'], Hfig=self.paramPlot['Hfig'], unit=self.paramPlot['unit'][0], num=self.paramPlot['num'])
         self.backend=mpl.get_backend()
         self.ax.set_aspect('equal', adjustable='box')
+
     def reset(self):
         if (len(self.paramPlot['vecX']) > 0 and len(self.paramPlot['vecY']) > 0):
             self.setGridXandGridY(
                 self.paramPlot['vecX'], self.paramPlot['vecY'])
 
-#            print('vecX and vecY have not been specified')
+        # print('vecX and vecY have not been specified')
         # plt.ioff()
 
-#        self.setExtent(self.paramPlot['extentFrame'])
+        # self.setExtent(self.paramPlot['extentFrame'])
         # plt.ion()
-        
-
 
     def setGridXandGridY(self, vecX, vecY):
         self.grid_x = np.ones((len(vecY), 1)) * vecX
@@ -170,7 +169,6 @@ class opyfDisplayer:
         self.cbaxes = self.fig.add_axes([0.15, 0.1, 0.70, 0.03])
         self.cb = self.fig.colorbar(self.im, cax=self.cbaxes, orientation='horizontal', **args)
         self.cb.set_label(label)
-
 
     def opyfField(self,grid_val, dConfig=None, extent=None, extentr=None, **args):
        
@@ -297,7 +295,7 @@ class opyfDisplayer:
         TargetPoints = opyf.Interpolate.npGrid2TargetPoint2D(
             new_grid_x, new_grid_y)
         Velocities = opyf.Interpolate.npGrid2TargetPoint2D(new_gridVx, new_gridVy)
-    #    colors=(Velocities[:,0]**2+Velocities[:,1]**2)**0.5
+        # colors=(Velocities[:,0]**2+Velocities[:,1]**2)**0.5
         if self.ax.get_ylim()[0] > self.ax.get_ylim()[1]:
             Velocities[:, 1] = -Velocities[:, 1]
         if normalize == False:
@@ -398,7 +396,7 @@ class opyfDisplayer:
             extent=self.paramPlot['extentFrame'], Hfig=self.paramPlot['Hfig'], unit=self.paramPlot['unit'][0], num=self.paramPlot['num'])
 
 
-#            self.fig,self.ax= opyffigureandaxes(extent=self.paramPlot['extentFrame'],Hfig=self.paramPlot['Hfig'],unit=self.paramPlot['unit'][0],num='opfPlot')
+        # self.fig,self.ax = opyffigureandaxes(extent=self.paramPlot['extentFrame'],Hfig=self.paramPlot['Hfig'],unit=self.paramPlot['unit'][0],num='opfPlot')
 
         if cmap is None:
             self.cmap = setcmap(Ptype, alpha=alpha)
@@ -456,7 +454,7 @@ class opyfDisplayer:
             self.opyfColorBar(label=Ptype+' velocity (in '+self.paramPlot['unit'][0]+'/'+self.paramPlot['unit'][1] + ')')
             self.cb.set_alpha(0.8)
             self.cb.draw_all()
-    #
+
         if self.paramDisp['DisplayPoints'] == True and Xdata is not None and Vdata is not None:
             self.opyfPointCloudScatter(Xdata, Vdata, s=s, color=c, **infoPlotPointCloud)
 
@@ -627,7 +625,7 @@ def opyfQuiverPointCloud(X, V, fig=None, ax=None, nvec=3000, normalize=False, **
         N = nvec
         print('only '+str(N)+'vectors ave been plotted because the number of velocity vectors is >' + str(nvec))
         # print('use the *nvec* parameter to change the number of vecors displayed')
-#    scale=args.get('scale',None)
+    # scale=args.get('scale',None)
     if 'cmap' in args:
         del args['cmap']
     if 'vlim' in args:
@@ -854,7 +852,7 @@ def opyfQuiverField(grid_x, grid_y, gridVx, gridVy, fig=None, ax=None, res=32, n
     TargetPoints = opyf.Interpolate.npGrid2TargetPoint2D(
         new_grid_x, new_grid_y)
     Velocities = opyf.Interpolate.npGrid2TargetPoint2D(new_gridVx, new_gridVy)
-#    colors=(Velocities[:,0]**2+Velocities[:,1]**2)**0.5
+    #    colors=(Velocities[:,0]**2+Velocities[:,1]**2)**0.5
     if normalize == False:
         qv = ax.quiver(TargetPoints[:, 0], TargetPoints[:, 1],
                        Velocities[:, 0], Velocities[:, 1], **args)
@@ -905,7 +903,7 @@ def opyfPointCloudColoredScatter(X, V, fig=None, ax=None, cmapCS=mpl.cm.coolwarm
     if 'markersize' in args:
         del args['markersize']
 
-#    sc=ax.scatter(X[:,0], X[:,1],c=norme,color=cmapCS(norm(norme)),**args)
+    #    sc=ax.scatter(X[:,0], X[:,1],c=norme,color=cmapCS(norm(norme)),**args)
     sc = ax.scatter(X[:, 0], X[:, 1], c=norme, cmap=cmapCS, **args)
     fig.show()
     return fig, ax, sc
@@ -946,7 +944,7 @@ def opyffigureandaxes(extent=[0, 1, 0, 1], unit='px', Hfig=8, sizemax=15, **args
     Lframe = np.absolute(extent[1]-extent[0])
     Lfig = Lframe*Hfig/Hframe
     # Location of the plot
-#    coefy=0.0004
+    #    coefy=0.0004
 
     num = args.get('num', 'opyfPlot')
     if num == 'opyfPlot':
@@ -1029,9 +1027,9 @@ def getax(fig=None, ax=None, values=None):
             ax = plt.Axes(fig, [0.1, 0.25, 0.85, 0.75])
     if fig is None and ax is not None:
         fig = ax.figure
-#        fig.show()
-#    if fig is not None and ax is not None:
-# fig.show()
+        #        fig.show()
+    #    if fig is not None and ax is not None:
+    # fig.show()
     return fig, ax
 
 
@@ -1165,7 +1163,7 @@ def opyfPlotRectilinear(vecX, vecY, gridVx, gridVy, setPlot, Xdata=None, Vdata=N
         resy = np.absolute(grid_y[1, 0]-grid_y[0, 0])
         extent = [grid_x[0, 0]-resx/2, grid_x[0, -1]+resx /
                   2, grid_y[-1, 0]-resy/2, grid_y[0, 0]+resy/2]
-#        figp,ax,im=opyfField2(grid_x,grid_y,Field,ax=ax,**infoPlotField)
+        #        figp,ax,im=opyfField2(grid_x,grid_y,Field,ax=ax,**infoPlotField)
         figp, ax, im = opyfField(
             Field, ax=ax, extent=extent, extentr=extentr, **infoPlotField)
 
@@ -1189,7 +1187,7 @@ def opyfPlotRectilinear(vecX, vecY, gridVx, gridVy, setPlot, Xdata=None, Vdata=N
             fig, sc, label=Ptype+' velocity (in '+setPlot['unit'][0]+'/'+setPlot['unit'][1] + ')')
         cb.set_alpha(0.8)
         cb.draw_all()
-#
+        
     if setPlot['DisplayPoints'] == True and Xdata is not None and Vdata is not None:
         figp, ax = opyfPointCloudScatter(
             Xdata, Vdata, ax=ax, s=10, color='k', **infoPlotPointCloud)

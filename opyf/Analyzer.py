@@ -72,24 +72,21 @@ class Analyzer():
         self.vlimPx = args.get('vlim', [-np.inf, np.inf])
         self.prevTracks = None
 
-
-# TODO extract samples + function        self.samplesMat = []
-#        self.Xsamples = []
+        # TODO extract samples + function        self.samplesMat = []
+        #        self.Xsamples = []
 
         self.unit = args.get('unit', ['px', 'deltaT'])
 
         self.set_imageParams(**args)
         self.paramPlot = {
-            'ScaleVectors': args.get(
-                'ScaleVectors', 0.1), 'vecX': [], 'vecY': [], 'extentFrame': args.get(
-                'extentFrame', [
-                    0, self.Lvis, self.Hvis, 0]), 'unit': args.get(
-                    'unit', [
-                        'px', 'deltaT']), 'Hfig': args.get(
-                            'Hfig', 8), 'grid': args.get(
-                                'grid', True), 'vlim': args.get(
-                                    'vlim', [
-                                        0, 40])}
+            'ScaleVectors': args.get('ScaleVectors', 0.1),
+            'vecX': [], 'vecY': [],
+            'extentFrame': args.get('extentFrame', [0, self.Lvis, self.Hvis, 0]),
+            'unit': args.get('unit', ['px', 'deltaT']),
+            'Hfig': args.get('Hfig', 8),
+            'grid': args.get('grid', True),
+            'vlim': args.get('vlim', [0, 40])
+        }
         self.birdEyeMod = False
         self.stabilizeOn = False
 
@@ -169,8 +166,6 @@ class Analyzer():
         print('Optical Flow Parameters:')
         for x in self.lk_params:
             print('\t- ', x, ':', self.lk_params[x])
-    # for the moment the radius must be given in px (more intuitive but should
-    # be clearer)
 
     def set_filtersParams(self,
                           RadiusF=30,
@@ -178,14 +173,11 @@ class Analyzer():
                           maxDevInRadius=np.inf,
                           wayBackGoodFlag=np.inf,
                           CLAHE=False,
-                          range_Vx=[-np.inf,
-                                    np.inf],
-                          range_Vy=[-np.inf,
-                                    np.inf],
+                          range_Vx=[-np.inf, np.inf],
+                          range_Vy=[-np.inf, np.inf],
                           clplim=3,
-                          gridSize=(20,
-                                    20)):
-
+                          gridSize=(20, 20)):
+        # for the moment the radius must be given in px (more intuitive but should be clearer)
         self.filters_params = dict(RadiusF=RadiusF,
                                    minNperRadius=minNperRadius,
                                    maxDevInRadius=maxDevInRadius,
@@ -201,8 +193,9 @@ class Analyzer():
         for x in self.filters_params:
             print('\t- ', x, ':', self.filters_params[x])
 
-    # When the data set is scaled the radius must be gven in the good length
-    # unity (meter, cm, ....)
+        # When the data set is scaled the radius must be gven in the good length
+        # unity (meter, cm, ....)
+
     def set_interpolationParams(
             self,
             Radius=None,
@@ -210,13 +203,12 @@ class Analyzer():
             kernel='Gaussian'):
         if Radius is None:
             Radius = self.scale * 30  # 30 px when the data set is not scaled
-            self.interp_params = dict(Radius=Radius,  
+            self.interp_params = dict(Radius=Radius,
                                       Sharpness=Sharpness,
                                       kernel=kernel)
         else:
             Radius = Radius
-    # set the a scaled value if the user does not introduce a Radius and the
-    # data set is scaled
+        # set the a scaled value if the user does not introduce a Radius and the data set is scaled
 
         print('')
         print('Interpolation Parameters:')
@@ -269,8 +261,7 @@ class Analyzer():
             pixLeft, pixRight, stepHor, pixUp, pixDown, stepVert)
 
         if self.scaled:
-            self.grid_y, self.grid_x = - \
-                (self.grid_y - self.origin[1]) * \
+            self.grid_y, self.grid_x = - (self.grid_y - self.origin[1]) * \
                 self.scale, (self.grid_x - self.origin[0]) * self.scale
 
         self.vecX = self.grid_x[0, :]
@@ -562,7 +553,7 @@ class Analyzer():
                         k += 1
                     else:
                         self.opyfDisp.fig.savefig(str(saveImgPath + '/' + display + '_' + format(i, '04.0f') +
-                        '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat))
+                                                      '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat))
 
                 if display is not False:
                     # self.opyfDisp.fig.show()
@@ -589,7 +580,7 @@ class Analyzer():
                 0,
                 tileGridSize=self.filters_params['gridSize'],
                 clipLimit=self.filters_params['clplim'])
-#             self.vis=Render.CLAHEbrightness(self.vis,0,tileGridSize=(20,20),clipLimit=2)
+            # self.vis=Render.CLAHEbrightness(self.vis,0,tileGridSize=(20,20),clipLimit=2)
 
         self.prev_gray, self.X, self.V = Track.opyfFlowGoodFlag(self.gray,
                                                                 self.prev_gray,
@@ -680,8 +671,8 @@ class Analyzer():
             print(
                 'No displacements measured (consider changing parameters set if displacements expected between these two frames)')
         else:
-            print('Displacement max = ' + str(np.max(np.absolute(self.V))) +
-                  ' ' + self.unit[0] + '/' + self.unit[1])
+            print(
+                f'Displacement max = {str(np.max(np.absolute(self.V)))} {self.unit[0]}/{self.unit[1]}')
 
     def scaleAndLogFlow(self, i):
         if self.scaled:
@@ -712,8 +703,7 @@ class Analyzer():
             print(
                 'No displacements measured (consider changing parameters set if displacements expected between these two frames)')
         else:
-            print('Displacement max = ' + str(np.max(np.absolute(self.V))) +
-                  ' ' + self.unit[0] + '/' + self.unit[1])
+            print(f'Displacement max = {str(np.max(np.absolute(self.V)))} {self.unit[0]}/{self.unit[1]}')
 
     def reset(self, first=False):
         self.Xdata = []
@@ -758,7 +748,7 @@ class Analyzer():
                         k += 1
                     else:
                         self.opyfDisp.fig.savefig(str(saveImgPath + '/' + display + '_' + format(i, '04.0f') +
-                        '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat))
+                                                      '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat))
 
                 if display is not False:
                     # self.opyfDisp.fig.show()
@@ -791,7 +781,7 @@ class Analyzer():
                         k += 1
                     else:
                         self.opyfDisp.fig.savefig(str(saveImgPath + '/' + display + '_' + format(i, '04.0f') +
-                        '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat))
+                                                      '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat))
 
                 if display is not False:
                     # self.opyfDisp.fig.show()
@@ -851,36 +841,36 @@ class Analyzer():
                                                 'field' or display == 'quiver_on_field'):
                     if numberingOutput:
                         fileN = str(saveImgPath + '/' + display + '_' +
-                            format(k, '04.0f') + '.' + imgFormat)
+                                    format(k, '04.0f') + '.' + imgFormat)
                         self.opyfDisp.fig.savefig(fileN)
                         k += 1
                     else:
                         fileN = str(saveImgPath + '/' + display + '_' + format(i, '04.0f') +
-                        '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat)
+                                    '_to_' + format(i + self.paramVecTime['step'], '04.0f') + '.' + imgFormat)
                         self.opyfDisp.fig.savefig(fileN)
-        self.fieldResults='time-serie'
+        self.fieldResults = 'time-serie'
 
     def extractGoodFeaturesDisplacementsAccumulateAndInterpolate(
             self,
-            display1 = 'quiver',
-            display2 = 'field',
-            saveImgPath = None,
-            Type = 'norm',
-            imgFormat = 'png',
+            display1='quiver',
+            display2='field',
+            saveImgPath=None,
+            Type='norm',
+            imgFormat='png',
             **args):
         self.imgFormat = imgFormat
         self.extractGoodFeaturesDisplacementsAndAccumulate(
-            display = display1, **args)
+            display=display1, **args)
         self.interpolateOnGrid(self.Xaccu, self.Vaccu)
         self.UxTot.append(np.reshape(
             self.interpolatedVelocities[:, 0], (self.Hgrid, self.Lgrid)))
         self.UyTot.append(np.reshape(
             self.interpolatedVelocities[:, 1], (self.Hgrid, self.Lgrid)))
-        self.Field=Render.setField(self.Ux, self.Uy, Type)
-        self.Field[np.where(self.Field == 0)]=np.nan
-        self.Field=self.Field * self.gridMask
+        self.Field = Render.setField(self.Ux, self.Uy, Type)
+        self.Field[np.where(self.Field == 0)] = np.nan
+        self.Field = self.Field * self.gridMask
         if display2 == 'field' and self.mute == False and self.display == True:
-            self.opyfDisp.plotField(self.Field, vis = self.vis, **args)
+            self.opyfDisp.plotField(self.Field, vis=self.vis, **args)
             if saveImgPath is not None:
                 self.opyfDisp.fig.savefig(saveImgPath + '/' + display2 + '_' + format(
                     self.vec[0], '04.0f') + '_to_' + format(self.vec[-1], '04.0f') + '.' + imgFormat)
@@ -898,61 +888,66 @@ class Analyzer():
         self.Xaccu, self.Vaccu = self.applyFilters(self.Xaccu, self.Vaccu)
         self.interpolateOnGrid(self.Xaccu, self.Vaccu)
         self.UxTot = []
-        self.UyTot = [] 
+        self.UyTot = []
         self.UxTot.append(np.reshape(
             self.interpolatedVelocities[:, 0], (self.Hgrid, self.Lgrid)))
         self.UyTot.append(np.reshape(
             self.interpolatedVelocities[:, 1], (self.Hgrid, self.Lgrid)))
-        self.Field=Render.setField(self.Ux, self.Uy, Type)
-        self.Field[np.where(self.Field == 0)]=np.nan
-        self.Field=self.Field * self.gridMask
+        self.Field = Render.setField(self.Ux, self.Uy, Type)
+        self.Field[np.where(self.Field == 0)] = np.nan
+        self.Field = self.Field * self.gridMask
 
         self.fieldResults = 'accumulation'
 
-    def showXV(self, X, V, vis = None,
-            display = 'quiver', displayColor = True, **args):
+    def showXV(self, X, V, vis=None, display='quiver', displayColor=True, **args):
         if display == 'quiver' and self.mute == False and self.display == True:
             self.opyfDisp.plotQuiverUnstructured(
-                X, V, vis = vis, displayColor = displayColor, **args)
+                X, V, vis=vis, displayColor=displayColor, **args)
 
         if display == 'points' and self.mute == False and self.display == True:
             self.opyfDisp.plotPointsUnstructured(
-                Xdata = X, Vdata = V, vis = vis, displayColor = displayColor, **args)
+                Xdata=X, Vdata=V, vis=vis, displayColor=displayColor, **args)
 
-    def scaleData( self, framesPerSecond = None,
-            metersPerPx = None,
-            unit = [ 'm', 's'], origin = None):
+    def scaleData(self, framesPerSecond=None, metersPerPx=None,
+                  unit=['m', 's'], origin=None):
 
         if self.scaled:
             print('datas already scaled')
         else:
-            self.scaled=True
+            self.scaled = True
 
             if origin is not None:
-                self.origin=origin
+                self.origin = origin
             else:
-                self.origin=[self.ROI[0], self.ROI[1]]
-            self.fps=framesPerSecond
-            self.scale=metersPerPx
-            self.unit=unit
-            self.Time=self.Time / self.fps
+                self.origin = [self.ROI[0], self.ROI[1]]
+            self.fps = framesPerSecond
+            self.scale = metersPerPx
+            self.unit = unit
+            self.Time = self.Time / self.fps
             if hasattr(self, 'X'):
-                self.X=(self.X - np.array(self.origin)) * self.scale
-                self.V=self.V * self.scale *self.fps / self.paramVecTime['step']
-                self.Vdata=[V * self.scale * self.fps /
+                self.X = (self.X - np.array(self.origin)) * self.scale
+                self.V = self.V * self.scale * \
+                    self.fps / self.paramVecTime['step']
+                self.Vdata = [V * self.scale * self.fps /
                               self.paramVecTime['step'] for V in self.Vdata]
 
                 self.Xdata = [(X - np.array(self.origin)) *
                               self.scale for X in self.Xdata]
             if hasattr(self, 'Ux'):
-                self.Ux, self.Uy= self.Ux * self.scale * self.fps / self.paramVecTime['step'], self.Uy * self.scale * self.fps / self.paramVecTime['step']
+                self.Ux, self.Uy = self.Ux * self.scale * self.fps / \
+                    self.paramVecTime['step'], self.Uy * \
+                    self.scale * self.fps / self.paramVecTime['step']
                 self.vecX = (self.vecX - self.origin[0]) * self.scale
                 self.vecY = (self.vecY - self.origin[1]) * self.scale
-                self.gridVx, self.gridVy= self.gridVx * self.scale * self.fps / self.paramVecTime['step'], self.gridVy *self.scale * self.fps / self.paramVecTime['step']
+                self.gridVx, self.gridVy = self.gridVx * self.scale * self.fps / \
+                    self.paramVecTime['step'], self.gridVy * \
+                    self.scale * self.fps / self.paramVecTime['step']
             if hasattr(self, 'UyTot'):
                 for i in range(len(self.UyTot)):
-                    self.UyTot[i]= self.UyTot[i] * self.scale *   self.fps / self.paramVecTime['step']
-                    self.UxTot[i]= self.UxTot[i] * self.scale * self.fps / self.paramVecTime['step']
+                    self.UyTot[i] = self.UyTot[i] * self.scale * \
+                        self.fps / self.paramVecTime['step']
+                    self.UxTot[i] = self.UxTot[i] * self.scale * \
+                        self.fps / self.paramVecTime['step']
 
             self.grid_y, self.grid_x = (
                 self.grid_y - self.origin[1]) * self.scale, (self.grid_x - self.origin[0]) * self.scale
@@ -966,7 +961,8 @@ class Analyzer():
             self.paramPlot = {'vecX': self.vecX,
                               'vecY': self.vecY,
                               'extentFrame': [(self.paramPlot['extentFrame'][0] - self.origin[0]) * self.scale,
-                                              (self.paramPlot['extentFrame'][1] - self.origin[0]) * self.scale,
+                                              (self.paramPlot['extentFrame']
+                                               [1] - self.origin[0]) * self.scale,
                                               -(self.paramPlot['extentFrame'][2] - self.origin[1]) * self.scale,
                                               -(self.paramPlot['extentFrame'][3] - self.origin[1]) * self.scale,
                                               ],
@@ -996,10 +992,10 @@ class Analyzer():
                 self.UyTot[i] = -self.UyTot[i]
 
     def writeGoodFeaturesPositionsAndDisplacements(self,
-            fileFormat='hdf5',
-            outFolder='.',
-            filename=None,
-            fileSequence=False):
+                                                   fileFormat='hdf5',
+                                                   outFolder='.',
+                                                   filename=None,
+                                                   fileSequence=False):
         self.filename = filename
 
         if not self.scaled:
@@ -1025,7 +1021,7 @@ class Analyzer():
                 Files.mkdir2(outFolder + '/' + filename)
                 for x, v, t in zip(XpROI, self.Vdata, self.Time):
                     Files.write_csvTrack2D(
-                        outFolder + '/' + filename + '/' + format( t,'04.0f') + '_to_' +  format(   t + self.paramVecTime['step'],   '04.0f') + '.' + fileFormat, x, v)
+                        outFolder + '/' + filename + '/' + format(t, '04.0f') + '_to_' + format(t + self.paramVecTime['step'],   '04.0f') + '.' + fileFormat, x, v)
 
         self.writeImageProcessingParamsJSON(outFolder=outFolder)
 
@@ -1040,7 +1036,8 @@ class Analyzer():
         # not been attributed
         self.filename = filename
         if len(self.UxTot) == 0:
-            sys.exit( '[Warning] the following method should be run to produce an interpolated field that can be saved {extractGoodFeaturesPositionsDisplacementsAndInterpolate} or {extractGoodFeaturesDisplacementsAccumulateAndInterpolate}')
+            sys.exit(
+                '[Warning] the following method should be run to produce an interpolated field that can be saved {extractGoodFeaturesPositionsDisplacementsAndInterpolate} or {extractGoodFeaturesDisplacementsAccumulateAndInterpolate}')
 
         vecXpROI = np.copy(self.vecX)
         vecYpROI = np.copy(self.vecY)
@@ -1055,22 +1052,27 @@ class Analyzer():
             if filename is None:
                 self.filename = 'velocity_field_from_frame_' + str(self.vec[0]) + '_to_' + str(self.vec[-1]) + '_with_step_' + str(
                     self.paramVecTime['step']) + '_and_shift_' + str(self.paramVecTime['shift'])
-            self.variables = [['Ux_[' + self.unit[0] +'.' +self.unit[1] +
-                               '-1]', self.UxTot], ['Uy_[' +  self.unit[0] +'.' +self.unit[1] + '-1]', self.UyTot]]
+            self.variables = [['Ux_[' + self.unit[0] + '.' + self.unit[1] +
+                               '-1]', self.UxTot], ['Uy_[' + self.unit[0] + '.' + self.unit[1] + '-1]', self.UyTot]]
             if fileFormat == 'hdf5':
-                Files.hdf5_Write(outFolder +     '/' +   self.filename +'.' +fileFormat, [['T_[' + self.unit[1] +']', self.Time], ['X_[' +self.unit[0] +']', vecXpROI], ['Y_[' +self.unit[0] +']', vecYpROI]], self.variables)
+                Files.hdf5_Write(outFolder + '/' + self.filename + '.' + fileFormat, [['T_[' + self.unit[1] + ']', self.Time], [
+                                 'X_[' + self.unit[0] + ']', vecXpROI], ['Y_[' + self.unit[0] + ']', vecYpROI]], self.variables)
 
             if fileFormat == 'tecplot' or fileFormat == 'csv' or fileFormat == 'tec':
                 for k in range(len(self.Time)):
                     VT = Interpolate.npGrid2TargetPoint2D(
                         self.UxTot[k], self.UyTot[k])
-                    variablesTecplot = [['Ux_[' + self.unit[0] + '.' + self.unit[1] + '^{-1}]', VT[:, 0]], ['Uy_[' + self.unit[0] +  '.' + self.unit[1] +  '-1]', VT[:, 1]]]
+                    variablesTecplot = [['Ux_[' + self.unit[0] + '.' + self.unit[1] + '^{-1}]', VT[:, 0]], [
+                        'Uy_[' + self.unit[0] + '.' + self.unit[1] + '-1]', VT[:, 1]]]
                     self.filename = 'velocity_field_from_frame_' + \
-                        str(self.vec[2 * k]) + '_to_' + str(self.vec[2 * k + 1])
+                        str(self.vec[2 * k]) + '_to_' + \
+                        str(self.vec[2 * k + 1])
                     if fileFormat == 'tecplot' or fileFormat == 'tec':
-                        Files.tecplot_WriteRectilinearMesh(str(outFolder +'/' + format(k, '04.0f') +'_' + self.filename + '.' + fileFormat), vecXpROI, vecYpROI, variablesTecplot)
+                        Files.tecplot_WriteRectilinearMesh(str(outFolder + '/' + format(
+                            k, '04.0f') + '_' + self.filename + '.' + fileFormat), vecXpROI, vecYpROI, variablesTecplot)
                     if fileFormat == 'csv':
-                        Files.csv_WriteRectilinearMesh(str(outFolder + '/' +  format( k, '04.0f') + '_' + self.filename + '.' + fileFormat), vecXpROI, vecYpROI, variablesTecplot)
+                        Files.csv_WriteRectilinearMesh(str(outFolder + '/' + format(
+                            k, '04.0f') + '_' + self.filename + '.' + fileFormat), vecXpROI, vecYpROI, variablesTecplot)
 
         elif self.fieldResults == 'accumulation':
             VT = Interpolate.npGrid2TargetPoint2D(self.UxTot[0], self.UyTot[0])
@@ -1081,13 +1083,14 @@ class Analyzer():
                 self.filename = 'frame_' + str(self.vec[0]) + '_to_' + str(self.vec[-1]) + '_with_step_' + str(
                     self.paramVecTime['step']) + '_and_shift_' + str(self.paramVecTime['shift'])
             self.variables = [['Ux_[' + self.unit[0] + '.' + self.unit[1] +
-                               '-1]', self.UxTot], ['Uy_[' +  self.unit[0] + '.' + self.unit[1] + '-1]', self.UyTot]]
+                               '-1]', self.UxTot], ['Uy_[' + self.unit[0] + '.' + self.unit[1] + '-1]', self.UyTot]]
             if fileFormat == 'hdf5':
                 Files.hdf5_Write(outFolder + '/' + self.filename + '.' +
-                                 fileFormat, [['T_[' +  self.unit[1] + ']', self.Time], ['X_[' + self.unit[0] + ']', vecXpROI], ['Y_[' +  self.unit[0] +']', vecYpROI]], self.variables)
+                                 fileFormat, [['T_[' + self.unit[1] + ']', self.Time], ['X_[' + self.unit[0] + ']', vecXpROI], ['Y_[' + self.unit[0] + ']', vecYpROI]], self.variables)
 
             if fileFormat == 'tecplot' or fileFormat == 'csv' or fileFormat == 'tec':
-                variablesTecplot = [['Ux_[' + self.unit[0] + '.' + self.unit[1] + '^{-1}]', VT[:, 0]], ['Uy_[' +   self.unit[0] +  '.' +  self.unit[1] + '^{-1}]', VT[:, 1]]]
+                variablesTecplot = [['Ux_[' + self.unit[0] + '.' + self.unit[1] + '^{-1}]', VT[:, 0]], [
+                    'Uy_[' + self.unit[0] + '.' + self.unit[1] + '^{-1}]', VT[:, 1]]]
 
                 if fileFormat == 'tecplot' or fileFormat == 'tec':
                     Files.tecplot_WriteRectilinearMesh(
@@ -1114,7 +1117,7 @@ class Analyzer():
         if saveParamsImgProc:
             self.writeImageProcessingParamsJSON(outFolder=outFolder)
 
- # TODO for csv format on file for each time step (or only one file if coordimates)
+# TODO for csv format on file for each time step (or only one file if coordimates)
 #        elif fileFormat=='csv':
 #            if fileSequence==False:
 #                Files.csv_WriteUnstructured2DTimeserie(outFolder+'/'+filename+'.'+fileFormat,self.Time,self.Xdata,self.Vdata)
@@ -1126,11 +1129,11 @@ class Analyzer():
 #
 # TODO export this method in Files
 
-    def writeTracks( self,
-            filename=None,
-            fileFormat='csv',
-            outFolder='.',
-            saveParamsImgProc=True):
+    def writeTracks(self,
+                    filename=None,
+                    fileFormat='csv',
+                    outFolder='.',
+                    saveParamsImgProc=True):
         import csv
         self.filename = filename
         print('')
@@ -1199,11 +1202,11 @@ class Analyzer():
         Files.writeImageProcessingParamsJSON(
             fulldict, outFolder=outFolder, filename=None)
 
-    def set_stabilization( self,
-            mask=None,
-            vlim=[  0, 40],
-            mute=True,
-            close_at_reset=False):
+    def set_stabilization(self,
+                          mask=None,
+                          vlim=[0, 40],
+                          mute=True,
+                          close_at_reset=False):
         if mask is None:
             mask = np.ones((self.Hvis, self.Lvis))
         if self.processingMode == 'video':
@@ -1242,7 +1245,8 @@ class Analyzer():
     def set_birdEyeViewProcessing(self, image_points,
                                   model_points,
                                   pos_bird_cam,
-                                  rotation=np.array([[1, 0, 0.], [0, -1, 0.], [0., 0., -1.]]),
+                                  rotation=np.array(
+                                      [[1, 0, 0.], [0, -1, 0.], [0., 0., -1.]]),
                                   scale=True, framesPerSecond=30, saveOutPut=None,
                                   axisSize=5):
 
@@ -1302,7 +1306,8 @@ class Analyzer():
         self.color = []
         props = dict(facecolor=(1, 1, 1), alpha=0.5, pad=2)
         for i in range(len(axisPoints)):
-            self.color.append( [np.random.uniform(), np.random.uniform(), np.random.uniform()])
+            self.color.append(
+                [np.random.uniform(), np.random.uniform(), np.random.uniform()])
             ax1.scatter(axisPoints[i, 0, 0],
                         axisPoints[i,  0, 1],
                         s=200,
@@ -1310,12 +1315,9 @@ class Analyzer():
                         marker='+',
                         color=self.color[i],
                         zorder=3)
-            ax1.text(axisPoints[i][0,
-                                   0],
-                     axisPoints[i][0,
-                                   1],
-                     '        X: ' + format(model_points[i][0],
-                                            '2.2f') + ' m Y: ' + format(model_points[i][1],   '2.2f') + ' m Z: ' + format(model_points[i][2], '2.2f') + ' m   ',
+            ax1.text(axisPoints[i][0, 0], axisPoints[i][0, 1],
+                     '        X: ' + format(model_points[i][0], '2.2f') + ' m Y: ' + format(
+                         model_points[i][1],   '2.2f') + ' m Z: ' + format(model_points[i][2], '2.2f') + ' m   ',
                      fontsize=6,
                      bbox=props,
                      zorder=1)
@@ -1372,13 +1374,12 @@ class Analyzer():
         self.vis = cv2.warpPerspective(
             self.vis, self.homography, (self.Lvis, self.Hvis))
 
+    # #    plt.subplot(121),plt.imshow(img),plt.title('Input')
+    # #    plt.subplot(122),plt.imshow(dst),plt.title('Output')
+    # #    plt.show()
+    #     return img_wraped
 
-# #    plt.subplot(121),plt.imshow(img),plt.title('Input')
-# #    plt.subplot(122),plt.imshow(dst),plt.title('Output')
-# #    plt.show()
-#     return img_wraped
-
-#            for x,v in zip(Xdata,Vdata):
+    #            for x,v in zip(Xdata,Vdata):
 
     # def extractGoodFeaturesPositionsAndExtractFeatures(self, display=False,
     # windowSize=(16, 16)):
@@ -1411,6 +1412,7 @@ class Analyzer():
     #         self.Xsamples.append(X)
     #         if display == 'points':
     #             self.show(self, X, X, vis, display='points')
+
 
 class videoAnalyzer(Analyzer):
     def __init__(self, video_src, **args):

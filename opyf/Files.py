@@ -85,7 +85,7 @@ def read_csv(csvpath, delimiter=','):
 
     f = open(csvpath, 'r')
     reader = csv.reader(f, delimiter=delimiter)
-#    reader  = csv.reader(f,  dialect='excel')
+    #    reader  = csv.reader(f,  dialect='excel')
     index = 0
     header = []
     datas = []
@@ -108,7 +108,7 @@ def read_csv_with_txt(csvpath, delimiter=','):
 
     f = open(csvpath, 'r')
     reader = csv.reader(f, delimiter=delimiter)
-#    reader  = csv.reader(f,  dialect='excel')
+    # reader  = csv.reader(f,  dialect='excel')
     index = 0
     header = []
     datas = []

@@ -133,7 +133,6 @@ def opyfFlowGoodFlag(frame, prev_gray, feature_params, lk_params, **args):
             X.append([x+vx/2, y+vy/2]) # position of the measured velocity at half of the displacement
             V.append([vx, vy])
 
-#        csvTrack=folder_outputs+'/'+format(incr,'04.0f')+'.csv'
     if X == []:
         X = np.empty((0, 2))
         V = np.empty((0, 2))

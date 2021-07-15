@@ -248,7 +248,7 @@ class opyfDisplayer:
         if 'markersize' in args:
             del args['markersize']
 
-    #    sc=ax.scatter(X[:,0], X[:,1],c=norme,color=cmapCS(norm(norme)),**args)
+        # sc=ax.scatter(X[:,0], X[:,1],c=norme,color=cmapCS(norm(norme)),**args)
         self.im = self.ax.scatter(X[:, 0], X[:, 1], c=norme, cmap=self.cmap, **args)
 
     def opyfPointCloudScatter(self,X, V,  **args):

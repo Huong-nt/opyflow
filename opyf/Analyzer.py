@@ -201,7 +201,7 @@ class Analyzer():
         Radius=None,
         Sharpness=8,
         kernel='Gaussian'
-    ):
+        ):
         if Radius is None:
             Radius = self.scale * 30  # 30 px when the data set is not scaled
             self.interp_params = dict(Radius=Radius,
@@ -307,7 +307,7 @@ class Analyzer():
             for pr, i in zip(self.prev, self.vec):
                 if not pr:
                     print(
-                        '--> detect Good Features to Track on image [' + self.listD[i] + ']')
+                        '--> detect Good Features to Track on image {self.listD[i] + ']')
                     file_prev = self.listD[i]
                 else:
                     print(
@@ -321,7 +321,7 @@ class Analyzer():
             for pr, i in zip(self.prev, self.vec):
                 if not pr:
                     print(
-                        '--> detect Good Features to Track on frame [' + str(i) + ']')
+                        '--> detect Good Features to Track on frame {str(i) + ']')
                     file_prev = str(i)
                 else:
                     print(
@@ -348,8 +348,7 @@ class Analyzer():
         while self.sortedVec[k] < iL:
             k += 1
         self.totDictByte = 0
-        while k < len(
-                self.sortedVec) and self.totDictByte < self.limitRAMinMByte:
+        while k < len(self.sortedVec) and self.totDictByte < self.limitRAMinMByte:
             indF = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
             ret, vis = self.cap.read()
             if indF == self.sortedVec[k]:
@@ -384,20 +383,14 @@ class Analyzer():
                 'Consider that for tracking [starting_frame+step*(Ntot)]  must be smaller than the number of frames')
             sys.exit()
 
-        print('Starting frame : [' + str(starting_frame) + ']')
+        print(f'Starting frame : {str(starting_frame)}')
 
-        print('--> Tracking operate from frame [' + str(
-            self.vecTracks[1]) + '] to [' + str(self.vecTracks[-1]) + ']')
+        print(f'--> Tracking operate from frame {str(self.vecTracks[1])} to {str(self.vecTracks[-1])}')
 
         print('On the first frame, only Good Features to Track are detected')
-
-        print('Maximum tracking length are [' + str(track_length) + ']')
-        print(
-            'Good features detection are reloaded every [' +
-            str(detection_interval) +
-            '] frames')
-        print(
-            'After[extractTracks] method, tracks are stored in [tracks], \nFor saving them run [writeTracks]')
+        print(f'Maximum tracking length are {str(track_length)}')
+        print(f'Good features detection are reloaded every {str(detection_interval)} frames')
+        print('After[extractTracks] method, tracks are stored in [tracks], \nFor saving them run [writeTracks]')
 
         self.set_filtersParams(wayBackGoodFlag=1)
 
@@ -598,30 +591,17 @@ class Analyzer():
             self.V[:, 1] = -self.V[:, 1]
         print('')
         self.incr += 1
-        print('-------------- [Tracking - Step ' + str(self.incr) + ' / ' +
-              str(self.paramVecTimeTracks['Ntot']) + '] --------------')
+        print(f'-------------- [Tracking - Step {str(self.incr)}/{str(self.paramVecTimeTracks["Ntot"])}] --------------')
 
         if self.processingMode == 'image sequence':
-            print('------- From frame [' +
-                  self.listD[i -
-                             self.paramVecTimeTracks['step']] +
-                  '] to frame [' +
-                  self.listD[i] +
-                  '] -------')
+            print('------- From frame [' + self.listD[i - self.paramVecTimeTracks['step']] + '] to frame [' + self.listD[i] + '] -------')
         if self.processingMode == 'video':
-            print('------- From frame [' +
-                  str(i -
-                      self.paramVecTimeTracks['step']) +
-                  '] to frame [' +
-                  str(i) +
-                  '] -------')
+            print('------- From frame [' + str(i - self.paramVecTimeTracks['step']) + '] to frame [' + str(i) + '] -------')
         print('Number of Good Feature To Track = ' + str(len(self.X)))
         if len(self.V) == 0:
-            print(
-                'No displacements measured (consider changing parameters set if displacements expected between these two frames)')
+            print('No displacements measured (consider changing parameters set if displacements expected between these two frames)')
         else:
-            print(
-                f'Displacement max = {str(np.max(np.absolute(self.V)))} {self.unit[0]}/{self.unit[1]}')
+            print(f'Displacement max = {str(np.max(np.absolute(self.V)))} {self.unit[0]}/{self.unit[1]}')
 
     def scaleAndLogFlow(self, i):
         if self.scaled:
@@ -631,28 +611,16 @@ class Analyzer():
             self.V[:, 1] = -self.V[:, 1]
         print('')
         self.incr += 1
-        print('-------------- [Step ' + str(self.incr) + ' / ' +
-              str(self.paramVecTime['Ntot']) + '] --------------')
+        print(f'-------------- [Tracking - Step {str(self.incr)}/{str(self.paramVecTime["Ntot"])}] --------------')
         if self.processingMode == 'image sequence':
-            print('------- From frame [' +
-                  self.listD[i -
-                             self.paramVecTime['step']] +
-                  '] to frame [' +
-                  self.listD[i] +
-                  '] -------')
+            print('------- From frame [' + self.listD[i - self.paramVecTime['step']] + '] to frame [' + self.listD[i] + '] -------')
         if self.processingMode == 'video':
-            print('------- From frame [' +
-                  str(i -
-                      self.paramVecTime['step']) +
-                  '] to frame [' +
-                  str(i) +
-                  '] -------')
+            print('------- From frame [' + str(i - self.paramVecTime['step']) + '] to frame [' + str(i) + '] -------')
         print('Number of Good Feature To Track = ' + str(len(self.X)))
         if len(self.V) == 0:
-            print(
-                'No displacements measured (consider changing parameters set if displacements expected between these two frames)')
+            print('No displacements measured (consider changing parameters set if displacements expected between these two frames)')
         else:
-            print(f'Displacement max = {str(np.max(np.absolute(self.V)))} {self.unit[0]}/{self.unit[1]}')
+            print(f'Displacement max={str(np.max(np.absolute(self.V)))} {self.unit[0]}/{self.unit[1]}')
 
     def reset(self, first=False):
         self.Xdata = []
@@ -1009,8 +977,7 @@ class Analyzer():
 
             if fileFormat == 'tecplot' or fileFormat == 'csv' or fileFormat == 'tec':
                 for k in range(len(self.Time)):
-                    VT = Interpolate.npGrid2TargetPoint2D(
-                        self.UxTot[k], self.UyTot[k])
+                    VT = Interpolate.npGrid2TargetPoint2D(self.UxTot[k], self.UyTot[k])
                     variablesTecplot = [['Ux_[' + self.unit[0] + '.' + self.unit[1] + '^{-1}]', VT[:, 0]], [
                         'Uy_[' + self.unit[0] + '.' + self.unit[1] + '-1]', VT[:, 1]]]
                     self.filename = 'velocity_field_from_frame_' + \

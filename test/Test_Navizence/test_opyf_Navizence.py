@@ -11,6 +11,7 @@ import sys, os
 os.chdir("./")
 # if opyf is not installed where is the opyf folder?
 sys.path.append('../../')
+sys.path.append('./')
 import opyf 
 import matplotlib.pyplot as plt
 #On ipython try the magic command "%matplotlib qt5" for external outputs or "%matplotlib inline" for inline outputs
@@ -21,7 +22,8 @@ plt.close('all')
 
 
 #Path toward the video file
-filePath='./2018.07.04_Station_fixe_30m_sample.mp4'
+# filePath='./2018.07.04_Station_fixe_30m_sample.mp4'
+filePath='test/Test_Navizence/2018.07.04_Station_fixe_30m_sample.mp4'
 #set the object information
 video=opyf.videoAnalyzer(filePath)
 '''

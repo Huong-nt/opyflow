@@ -50,14 +50,16 @@ class Analyzer():
             self.mute = True
         self.scaled = False
         self.scale = 1
-        if imageROI is None:
-            self.ROI = [0, 0, self.frameInit.shape[1], self.frameInit.shape[0]]
-        else:
+        if len(imageROI) == 4:
             self.ROI = imageROI
-        print('Regio Of Interest :\n \t', self.ROI)
-        self.cropFrameInit = self.frameInit[self.ROI[1]:(
-            self.ROI[3] + self.ROI[1]), self.ROI[0]:(self.ROI[2] + self.ROI[0])]
+        else:
+            self.ROI = [0, 0, self.frameInit.shape[1], self.frameInit.shape[0]]
+
+        print('Region Of Interest :\n \t', self.ROI)
+        self.cropFrameInit = self.frameInit[self.ROI[1]:(self.ROI[3] + self.ROI[1]), self.ROI[0]:(self.ROI[2] + self.ROI[0])]
         self.Hvis, self.Lvis = self.cropFrameInit.shape
+        if len(imageROI) == 2:
+            self.Hvis, self.Lvis = imageROI[0], imageROI[1]
 
         self.set_mask(mask)
 
@@ -306,8 +308,7 @@ class Analyzer():
         if self.processingMode == 'image sequence' and self.mute == False:
             for pr, i in zip(self.prev, self.vec):
                 if not pr:
-                    print(
-                        '--> detect Good Features to Track on image {self.listD[i] + ']')
+                    print(f'--> detect Good Features to Track on image {self.listD[i]}]')
                     file_prev = self.listD[i]
                 else:
                     print(
@@ -320,16 +321,10 @@ class Analyzer():
         if self.processingMode == 'video' and self.mute == False:
             for pr, i in zip(self.prev, self.vec):
                 if not pr:
-                    print(
-                        '--> detect Good Features to Track on frame {str(i) + ']')
+                    print(f'--> detect Good Features to Track on frame [{str(i)}]')
                     file_prev = str(i)
                 else:
-                    print(
-                        '--> diplacements measurement between frame [' +
-                        file_prev +
-                        '] and [' +
-                        str(i) +
-                        ']')
+                    print(f'--> diplacements measurement between frame [{file_prev}] and [{str(i)}]')
         self.Time = (self.vec[0:-1:2] + self.vec[1::2]) / 2
         # initilize self.vis with the first frame of the set
 
@@ -431,8 +426,7 @@ class Analyzer():
                 self.loadDict(i)
                 self.vis = self.dictFrames[str(i)]
 
-        self.vis = self.vis[self.ROI[1]:(
-            self.ROI[3] + self.ROI[1]), self.ROI[0]:(self.ROI[2] + self.ROI[0])]
+        self.vis = self.vis[self.ROI[1]:(self.ROI[3] + self.ROI[1]), self.ROI[0]:(self.ROI[2] + self.ROI[0])]
 
         if self.rangeOfPixels != [0, 255]:
             self.vis = np.array(self.vis, dtype='float32')
@@ -777,7 +771,7 @@ class Analyzer():
             **args):
         self.imgFormat = imgFormat
         self.extractGoodFeaturesDisplacementsAndAccumulate(
-            display=display1, **args)
+            display=display1, saveImgPath=saveImgPath, **args)
         self.interpolateOnGrid(self.Xaccu, self.Vaccu)
         self.UxTot.append(np.reshape(
             self.interpolatedVelocities[:, 0], (self.Hgrid, self.Lgrid)))
@@ -825,8 +819,7 @@ class Analyzer():
             self.opyfDisp.plotPointsUnstructured(
                 Xdata=X, Vdata=V, vis=vis, displayColor=displayColor, **args)
 
-    def scaleData(self, framesPerSecond=None, metersPerPx=None,
-                  unit=['m', 's'], origin=None):
+    def scaleData(self, framesPerSecond=None, metersPerPx=None, unit=['m', 's'], origin=None):
 
         if self.scaled:
             print('datas already scaled')
@@ -843,13 +836,10 @@ class Analyzer():
             self.Time = self.Time / self.fps
             if hasattr(self, 'X'):
                 self.X = (self.X - np.array(self.origin)) * self.scale
-                self.V = self.V * self.scale * \
-                    self.fps / self.paramVecTime['step']
-                self.Vdata = [V * self.scale * self.fps /
-                              self.paramVecTime['step'] for V in self.Vdata]
+                self.V = self.V * self.scale * self.fps / self.paramVecTime['step']
+                self.Vdata = [V * self.scale * self.fps / self.paramVecTime['step'] for V in self.Vdata]
 
-                self.Xdata = [(X - np.array(self.origin)) *
-                              self.scale for X in self.Xdata]
+                self.Xdata = [(X - np.array(self.origin)) * self.scale for X in self.Xdata]
             if hasattr(self, 'Ux'):
                 self.Ux, self.Uy = self.Ux * self.scale * self.fps / \
                     self.paramVecTime['step'], self.Uy * \
@@ -869,10 +859,10 @@ class Analyzer():
             self.grid_y, self.grid_x = (
                 self.grid_y - self.origin[1]) * self.scale, (self.grid_x - self.origin[0]) * self.scale
             self.invertYaxis()
-            self.XT = Interpolate.npGrid2TargetPoint2D(
-                self.grid_x, self.grid_y)
+            self.XT = Interpolate.npGrid2TargetPoint2D(self.grid_x, self.grid_y)
 
-            self.interp_params = dict(Radius=self.interp_params['Radius'] * self.scale,  # it is not necessary to perform interpolation on a high radius since we have a high number of values
+            # it is not necessary to perform interpolation on a high radius since we have a high number of values
+            self.interp_params = dict(Radius=self.interp_params['Radius'] * self.scale,  
                                       Sharpness=self.interp_params['Sharpness'],
                                       kernel='Gaussian')
             self.paramPlot = {'vecX': self.vecX,
@@ -888,8 +878,7 @@ class Analyzer():
 
             if self.display:
                 plt.close(self.num)
-                self.opyfDisp = Render.opyfDisplayer(
-                    **self.paramPlot, num=self.num)
+                self.opyfDisp = Render.opyfDisplayer(**self.paramPlot, num=self.num)
 
     def invertYaxis(self):
         self.vecY = -self.vecY

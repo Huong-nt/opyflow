@@ -98,7 +98,7 @@ def opyfFlowGoodFlag(frame, prev_gray, feature_params, lk_params, **args):
     vmax = args.get('vmax', np.inf)
     if vmax == None:
         vmax = np.inf
-    # wayBackGoodFlag determine the acceptable error when flow is claculated from A to B
+    # wayBackGoodFlag determine the acceptable error when flow is calculated from A to B
     wayBackGoodFlag = args.get('wayBackGoodFlag', 1)
     # and then from B to A.
     ROI = args.get('ROI', None)
@@ -111,10 +111,8 @@ def opyfFlowGoodFlag(frame, prev_gray, feature_params, lk_params, **args):
     p0 = cv2.goodFeaturesToTrack(frame_gray, **feature_params)
     if prev_gray is not None:
         img0, img1 = prev_gray, frame_gray
-        p1, st, err = cv2.calcOpticalFlowPyrLK(
-            img0, img1, p0, None, **lk_params)
-        p0r, st, err = cv2.calcOpticalFlowPyrLK(
-            img1, img0, p1, None, **lk_params)
+        p1, st, err = cv2.calcOpticalFlowPyrLK(img0, img1, p0, None, **lk_params)
+        p0r, st, err = cv2.calcOpticalFlowPyrLK(img1, img0, p1, None, **lk_params)
         d = abs(p0-p0r).reshape(-1, 2).max(-1)
         good = (d < wayBackGoodFlag)
         Xtemp = p0.reshape(-1, 2)

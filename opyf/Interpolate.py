@@ -40,7 +40,7 @@ def npInterpolateVTK2D(npPoints, npValues, npTargetPoints, ParametreInterpolator
             vtkFA.InsertNextValue(v[i])
         UnGrid.GetPointData().AddArray(vtkFA)
 
-# Set Target Points
+    # Set Target Points
 
     vtkTP = vtk.vtkPoints()
     for [x, y] in npTargetPoints:
@@ -73,8 +73,8 @@ def npInterpolateVTK2D(npPoints, npValues, npTargetPoints, ParametreInterpolator
     interp.Update()
 
     outputInterp = interp.GetOutput()
-    pointsArr = outputInterp.GetPoints().GetData()
-    nppointsArr = vtk_to_numpy(pointsArr)
+    # pointsArr = outputInterp.GetPoints().GetData()
+    # nppointsArr = vtk_to_numpy(pointsArr)
     pdata = outputInterp.GetPointData()
 
     # Convert volocities into Numpy Array

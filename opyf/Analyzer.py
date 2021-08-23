@@ -50,7 +50,7 @@ class Analyzer():
             self.mute = True
         self.scaled = False
         self.scale = 1
-        if len(imageROI) == 4:
+        if imageROI != None and len(imageROI) == 4:
             self.ROI = imageROI
         else:
             self.ROI = [0, 0, self.frameInit.shape[1], self.frameInit.shape[0]]
@@ -58,7 +58,7 @@ class Analyzer():
         print('Region Of Interest :\n \t', self.ROI)
         self.cropFrameInit = self.frameInit[self.ROI[1]:(self.ROI[3] + self.ROI[1]), self.ROI[0]:(self.ROI[2] + self.ROI[0])]
         self.Hvis, self.Lvis = self.cropFrameInit.shape
-        if len(imageROI) == 2:
+        if imageROI != None and len(imageROI) == 2:
             self.Hvis, self.Lvis = imageROI[0], imageROI[1]
 
         self.set_mask(mask)
@@ -700,8 +700,7 @@ class Analyzer():
 
     def interpolateOnGrid(self, X, V):
         print('[I] ' + str(len(X)) + ' vectors to interpolate')
-        self.interpolatedVelocities = Interpolate.npInterpolateVTK2D(
-            X, V, self.XT, ParametreInterpolatorVTK=self.interp_params)
+        self.interpolatedVelocities = Interpolate.npInterpolateVTK2D(X, V, self.XT, ParametreInterpolatorVTK=self.interp_params)
 
         # self.gridMask[np.where(self.gridMask == 0)] = np.nan
         self.Ux = Interpolate.npTargetPoints2Grid2D(
